@@ -1,26 +1,14 @@
-import java.util.Scanner;
+
 
 public class Calculator {
 
 
-    public static void main (String[] args) {
-        System.out.println("после каждого числа и знака ставить пробел");
 
-        Scanner scn = new Scanner(System.in);
-
-        String equation = scn.nextLine();
-        if ("exit".equals(equation)) {
-            return;
-        }
-
-        String[] priorityResult = priorityProcessing(parenthesisPriority(equation));
-
-        Integer summ = sumEquation(priorityResult);
-
-        System.out.println(summ);
-
-        main(args);
+    public double execute(String equation) {
+        return sumEquation(priorityProcessing(parenthesisPriority(equation)));
     }
+
+
 
     /**
      * Выполняет приоритетные операции (умножение и деление)
@@ -28,7 +16,7 @@ public class Calculator {
      * @param equationMass массив строк состоящий из заданного уравнения
      * @return массив строк с выполненными приоритетными операциями
      */
-    private static String[] priorityProcessing(String[] equationMass) {
+    private String[] priorityProcessing(String[] equationMass) {
         String[] result = new String[equationMass.length];
 
         int count = 0;
@@ -43,9 +31,9 @@ public class Calculator {
             } else if (str.equals("*") || str.equals("/")) {
                 lastSymbol = str;
             } else if (lastSymbol != null) {
-                Integer preNum = Integer.parseInt(lastNum);
-                Integer postNum = Integer.parseInt(str);
-                lastNum = Integer.toString(dataProcessing(preNum, postNum, lastSymbol));
+                Double preNum = Double.parseDouble(lastNum);
+                Double postNum = Double.parseDouble(str);
+                lastNum = Double.toString(dataProcessing(preNum, postNum, lastSymbol));
                 lastSymbol = null;
             } else {
                 result[count++] = lastNum;
@@ -72,7 +60,7 @@ public class Calculator {
      * @param operationSymbol операция, которую необходимо выполнить
      * @return результат операции
      */
-    private static int dataProcessing(int firstNum, int secondNum, String operationSymbol) {
+    private double dataProcessing(double firstNum, double secondNum, String operationSymbol) {
         switch (operationSymbol) {
             case "-": return firstNum - secondNum;
             case "+": return firstNum + secondNum;
@@ -88,7 +76,7 @@ public class Calculator {
      * @param equationMass массив строк состоящий из заданного уравнения
      * @return результат выражения
      */
-    private static int sumEquation(String[] equationMass) {
+    private double sumEquation(String[] equationMass) {
         String lastNum = null;
         String lastSymbol = null;
 
@@ -98,13 +86,13 @@ public class Calculator {
             } else if (lastSymbol == null) {
                 lastSymbol = str;
             } else if (lastSymbol.equals("+") || lastSymbol.equals("-")) {
-                Integer preNum = Integer.parseInt(lastNum);
-                Integer postNum = Integer.parseInt(str);
-                lastNum = Integer.toString(dataProcessing(preNum, postNum, lastSymbol));
+                Double preNum =  Double.parseDouble(lastNum);
+                Double postNum =  Double.parseDouble(str);
+                lastNum = Double.toString(dataProcessing(preNum, postNum, lastSymbol));
                 lastSymbol = null;
             }
         }
-        return Integer.parseInt(lastNum);
+        return Double.parseDouble(lastNum);
     }
 
     /**
@@ -113,7 +101,7 @@ public class Calculator {
      * @param equation выражение
      * @return массив строк  выполненными выражениями внутри скобок.
      */
-    private static String[] parenthesisPriority(String equation) {
+    private String[] parenthesisPriority(String equation) {
         String[] equationMass = equation.split(" ");
         String[] result = new String[equationMass.length];
         String[] parenthesisMass = new String[equationMass.length - 2];
@@ -130,7 +118,7 @@ public class Calculator {
                 String[] tmpMass = new String[countParenthesis];
                 System.arraycopy(parenthesisMass, 0, tmpMass, 0, countParenthesis);
 
-                result[countResult] = Integer.toString(sumEquation(priorityProcessing(tmpMass)));
+                result[countResult] = Double.toString(sumEquation(priorityProcessing(tmpMass)));
                 countResult++;
                 countParenthesis = 0;
                 parenthesisMass = new String[equationMass.length - 2];
